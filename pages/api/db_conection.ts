@@ -14,11 +14,10 @@ export default function async(req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const date = async (req: NextApiRequest, res: NextApiResponse) => {
-	const { pool } = db;
+	//const { pool } = db;
 
 	await db.connect();
-	const response = await pool.query("select now()");
 	await db.desconect();
 
-	return res.status(200).json({ message1: response[1] });
+	return res.status(200).json({ message1: "Hola mundo" });
 };

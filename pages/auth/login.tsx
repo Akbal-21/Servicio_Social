@@ -72,7 +72,7 @@ const Loginpage = () => {
 								required: "Este campo es requerido",
 								validate: validations.isEmail,
 							})}
-							error
+							error={!!errors.email}
 							helperText={errors.email?.message}
 						/>
 					</Grid>
@@ -87,7 +87,7 @@ const Loginpage = () => {
 								required: "Este campo es requerido",
 								minLength: { value: 6, message: "Míniomo 6 caracteres" },
 							})}
-							error
+							error={!!errors.password}
 							helperText={errors.password?.message}
 						/>
 					</Grid>

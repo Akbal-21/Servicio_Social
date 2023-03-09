@@ -1,40 +1,31 @@
-import fs from "fs";
-import mysql from "mysql2/promise";
+import { DataSource } from "typeorm";
+import { Data_User, User } from "./entities";
 
-/**
- * 0 = disconnected
- * 1 = connected
- * 2 = connecting
- * 3 = disconnecting
- */
-
-export const pool = mysql.createPool({
+export const AppDataSource = new DataSource({
+	type: "mysql",
 	host: process.env.MYSQL_HOST,
-	user: process.env.MYSQL_USER,
+	username: process.env.MYSQL_USER,
 	database: process.env.MYSQL_DATABASE,
 	password: process.env.MYSQL_PASWORD,
 	port: Number(process.env.MYSQL_PORT),
-	ssl: {
-		// cert: fs.readFileSync("/home/fernando/Documentos/ss/cacert.pem"),
-		ca: fs.readFileSync("/home/fernando/Documentos/ss/cacert.pem"),
-	},
+	logging: true,
+	//synchronize: true,
+	entities: [User, Data_User],
 });
 
-// const sqlconection = {
-// isConnected: 0,
-// };
-
 export const connect = async () => {
-	if (await pool.getConnection()) {
-		console.log("connected");
-	} else {
-		console.log("connecting");
-		await pool.getConnection();
-		console.log("connected");
+	try {
+		await AppDataSource.initialize();
+	} catch (error) {
+		console.log(error);
 	}
 };
 
 export const desconect = async () => {
-	console.log("desconectado");
-	await pool.end();
+	await AppDataSource.destroy();
 };
+
+// {
+// 	"email":"akbal153@hotmail.com",
+// 	"password":"123456"
+// }

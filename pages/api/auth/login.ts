@@ -1,8 +1,8 @@
-/* eslint-disable import/no-anonymous-default-export */
 import { db } from "@/database";
-import { pool } from "@/database/database";
+import { User } from "@/database/entities";
 import bcrypt from "bcryptjs";
-import { RowDataPacket } from "mysql2/promise";
+/* eslint-disable import/no-anonymous-default-export */
+//import { pool } from "@/database/database";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data =
@@ -12,8 +12,8 @@ type Data =
 	| {
 			users: {
 				id_User: number;
-				name: string;
-				tipo_user: boolean;
+				email: string;
+				type_User: string;
 			};
 	  };
 
@@ -32,30 +32,31 @@ export default async function (
 }
 
 const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	const { email = "", password = "" } = req.body;
-
-	const query1 = "SELECT * FROM `User` WHERE correo_User=?";
+	const { email1 = "", password = "" } = req.body;
 
 	await db.connect();
 
-	const response1 = await pool.query(query1, [email]);
-	const resp1 = (<RowDataPacket>response1)[0];
+	const user = await User.findOne({ where: { email: email1 } });
 
-	if (!resp1[0]) {
+	await db.desconect();
+
+	console.log(user);
+
+	if (!user) {
 		return res.status(404).json({ message: "User not found" });
 	}
 
-	const { id_User, name, contra_User, tipo_user } = resp1[0];
+	const { id_User, email, type_User } = user;
 
-	if (!bcrypt.compareSync(password, contra_User)) {
+	if (!bcrypt.compareSync(password, user.password)) {
 		return res.status(404).json({ message: "User not found" });
 	}
 
 	return res.status(200).json({
 		users: {
 			id_User,
-			name,
-			tipo_user,
+			email,
+			type_User,
 		},
 	});
 };

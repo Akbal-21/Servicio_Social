@@ -1,10 +1,9 @@
 import { db } from "@/database";
-import { pool } from "@/database/database";
+import { Data_User, User } from "@/database/entities";
 import { validations } from "@/utils";
 import bcrypt from "bcryptjs";
-import { RowDataPacket } from "mysql2/promise";
-/* eslint-disable import/no-anonymous-default-export */
 import type { NextApiRequest, NextApiResponse } from "next";
+/* eslint-disable import/no-anonymous-default-export */
 
 type Data =
 	| {
@@ -31,13 +30,17 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 async function register(req: NextApiRequest, res: NextApiResponse<Data>) {
 	const {
-		nombre = "",
-		email1 = "",
+		name = "",
+		email = "",
 		password = "",
+		last_name = "",
+		second_last_namme = "",
 	} = req.body as {
-		nombre: string;
-		email1: string;
+		name: string;
+		email: string;
 		password: string;
+		last_name: string;
+		second_last_namme: string;
 	};
 
 	if (password.length < 6) {
@@ -46,29 +49,48 @@ async function register(req: NextApiRequest, res: NextApiResponse<Data>) {
 			.json({ message: "La contraseña debe de ser de 6 caracteres" });
 	}
 
-	if (nombre.length < 2) {
+	if (name.length < 2) {
 		return res
 			.status(404)
 			.json({ message: "El nombre debe de ser de 2 caracteres" });
 	}
 
-	if (!validations.isValidEmail(email1)) {
+	if (last_name.length < 2) {
+		return res
+			.status(404)
+			.json({ message: "El nombre debe de ser de 2 caracteres" });
+	}
+
+	if (second_last_namme.length < 2) {
+		return res
+			.status(404)
+			.json({ message: "El nombre debe de ser de 2 caracteres" });
+	}
+
+	if (!validations.isValidEmail(email)) {
 		return res.status(404).json({ message: "El email no es valido" });
 	}
 
-	const password1 = bcrypt.hashSync(password);
-	const email2 = email1.toLocaleLowerCase();
+	const user = new User();
+	user.email = email.toLocaleLowerCase();
+	user.password = bcrypt.hashSync(password);
+	user.type_User = "admin";
 
-	const query1 =
-		"INSERT INTO User (name, correo_User, contra_User, tipo_user) VALUES (?, ?, ?, ?)";
+	const data_user = new Data_User();
+	data_user.name = name;
+	data_user.last_name = last_name;
+	data_user.second_last_name = second_last_namme;
 
 	await db.connect();
 
-	const response1 = await pool.query(query1, [nombre, email2, password1, 1]);
-	const resp1 = (<RowDataPacket>response1)[0];
+	await user.save();
+	await data_user.save();
 
-	console.log(resp1);
-	console.log("Registro hecho con exito");
+	await db.desconect();
 
 	return res.status(200).json({ message: "Hola mundo" });
 }
+
+// "name" : "Fernando",
+// "last_name" : "Serrano",
+// "second_last_namme" : "Vazuqez",
