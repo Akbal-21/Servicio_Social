@@ -1,6 +1,6 @@
+import { ssApi } from "@/api";
+import { IUser } from "@/interfaces/userLogin";
 import { FC, useReducer } from "react";
-import ssApi from "../../api/ssApi";
-import { IUser } from "../../interfaces/user";
 import { AuthContext, authReducer } from "./";
 
 export interface AuthState {

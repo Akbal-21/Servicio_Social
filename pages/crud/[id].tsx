@@ -1,17 +1,20 @@
-import { dbData_User } from "@/database";
+import { UserContext } from "@/context/user_data";
+import { dbDataUser } from "@/database";
 import { IData_User } from "@/interfaces";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
-import { ChangeEvent, useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import { ChangeEvent, useContext, useMemo, useState } from "react";
 
 interface Props {
 	data_user: IData_User;
 }
 
 const UserEntry: NextPage<Props> = ({ data_user }) => {
-	//const { updateUser, deletUsers } = useContext(UserContext);
+	const router = useRouter();
+	const { updateUser, deletUsers } = useContext(UserContext);
 
 	const { name, last_name, second_last_name } = data_user;
 
@@ -71,6 +74,7 @@ const UserEntry: NextPage<Props> = ({ data_user }) => {
 		// };
 		//
 		// updateUser(updateUSer);
+		//router.push("/crud");
 	};
 
 	const onDelete = async () => {
@@ -168,8 +172,9 @@ const UserEntry: NextPage<Props> = ({ data_user }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	const { id } = params as { id: string };
+	console.log(id);
 
-	const data_user = await dbData_User.getUserById(id);
+	const data_user = await dbDataUser.getUserById(id);
 	console.log(data_user);
 
 	return {

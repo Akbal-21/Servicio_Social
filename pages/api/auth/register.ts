@@ -1,9 +1,8 @@
-import { db } from "@/database";
-import { Data_User, User } from "@/database/entities";
-import { validations } from "@/utils";
-import bcrypt from "bcryptjs";
-import type { NextApiRequest, NextApiResponse } from "next";
 /* eslint-disable import/no-anonymous-default-export */
+import { db } from "@/database";
+import { data_user, user } from "@/models";
+import { validations } from "@/utils";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data =
 	| {
@@ -71,20 +70,10 @@ async function register(req: NextApiRequest, res: NextApiResponse<Data>) {
 		return res.status(404).json({ message: "El email no es valido" });
 	}
 
-	const user = new User();
-	user.email = email.toLocaleLowerCase();
-	user.password = bcrypt.hashSync(password);
-	user.type_User = "admin";
+	const userr = new user();
 
-	const data_user = new Data_User();
-	data_user.name = name;
-	data_user.last_name = last_name;
-	data_user.second_last_name = second_last_namme;
-
+	const data_use = new data_user();
 	await db.connect();
-
-	await user.save();
-	await data_user.save();
 
 	await db.desconect();
 

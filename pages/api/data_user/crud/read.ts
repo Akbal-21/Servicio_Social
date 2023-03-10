@@ -1,8 +1,8 @@
-import { db } from "@/database";
-import { Data_User } from "@/database/entities";
-import type { NextApiRequest, NextApiResponse } from "next";
-
 /* eslint-disable import/no-anonymous-default-export */
+import { db } from "@/database";
+import { data_user } from "@/models";
+import { NextApiRequest, NextApiResponse } from "next";
+
 type Data = {
 	message: string;
 };
@@ -23,7 +23,7 @@ async function getUser(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		await db.connect();
 
-		users = await Data_User.find();
+		users = await data_user.findAll();
 
 		await db.desconect();
 	} catch (error) {

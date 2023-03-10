@@ -1,10 +1,10 @@
-import { dbData_User } from "@/database";
+import { dbDataUser } from "@/database";
+import { IData_User } from "@/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button, Grid, Link, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { GetServerSideProps, NextPage } from "next";
 import NextLink from "next/link";
-import { IData_User } from "../../interfaces/data_user";
 
 const columns: GridColDef[] = [
 	{ field: "id", headerName: "ID", headerAlign: "center", width: 70 },
@@ -42,7 +42,7 @@ const columns: GridColDef[] = [
 				</div>
 			);
 		},
-		width: 200,
+		width: 250,
 	},
 ];
 
@@ -57,6 +57,7 @@ const CRUD_User_Page: NextPage<Props> = ({ data_user }) => {
 		last_name: user.last_name,
 		second_last_name: user.second_last_name,
 	}));
+	console.log(data_user);
 	return (
 		<div>
 			<div>
@@ -88,7 +89,7 @@ const CRUD_User_Page: NextPage<Props> = ({ data_user }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-	const data_user = await dbData_User.getUsers();
+	const data_user = await dbDataUser.getUsers();
 	console.log(data_user);
 
 	return {

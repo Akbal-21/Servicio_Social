@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { db } from "@/database";
-import { Data_User } from "@/database/entities";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { data_user } from "@/models";
+import { NextApiRequest, NextApiResponse } from "next";
 
 type Data =
 	| {
@@ -9,7 +9,6 @@ type Data =
 	  }
 	| {
 			DATA_USER: {
-				id_Data_User: number;
 				name: string;
 				last_name: string;
 				second_last_name: string;
@@ -28,42 +27,45 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 async function create_User(req: NextApiRequest, res: NextApiResponse<Data>) {
 	const {
-		name1 = "",
-		last_name1 = "",
-		second_last_name1 = "",
+		name = "",
+		last_name = "",
+		second_last_name = "",
 	} = req.body as {
-		name1: string;
-		last_name1: string;
-		second_last_name1: string;
+		name: string;
+		last_name: string;
+		second_last_name: string;
 	};
 
-	if (name1.length < 2) {
+	if (name.length < 2) {
 		return res
 			.status(404)
 			.json({ message: "El nombre debe de ser de 2 caracteres" });
 	}
 
-	if (last_name1.length < 2) {
+	if (last_name.length < 2) {
 		return res
 			.status(404)
 			.json({ message: "El nombre debe de ser de 2 caracteres" });
 	}
 
-	if (second_last_name1.length < 2) {
+	if (second_last_name.length < 2) {
 		return res
 			.status(404)
 			.json({ message: "El nombre debe de ser de 2 caracteres" });
 	}
 
-	const data_user = new Data_User();
-	data_user.name = name1;
-	data_user.last_name = last_name1;
-	data_user.second_last_name = second_last_name1;
+	// const data_user = new Data_User();
+	// data_user.name = name1;
+	// data_user.last_name = last_name1;
+	// data_user.second_last_name = second_last_name1;
+	let dat_user;
 	try {
 		await db.connect();
-
-		await data_user.save();
-
+		dat_user = await data_user.create({
+			name,
+			last_name,
+			second_last_name,
+		});
 		await db.desconect();
 	} catch (error) {
 		if (error instanceof Error) {
@@ -71,14 +73,14 @@ async function create_User(req: NextApiRequest, res: NextApiResponse<Data>) {
 		}
 	}
 
-	const { id_Data_User, name, last_name, second_last_name } = data_user;
+	console.log(dat_user);
 
 	return res.status(200).json({
-		DATA_USER: {
-			id_Data_User,
-			name,
-			last_name,
-			second_last_name,
-		},
+		// DATA_USER: {
+		// name,
+		// last_name,
+		// second_last_name,
+		// },
+		message: "Hola",
 	});
 }

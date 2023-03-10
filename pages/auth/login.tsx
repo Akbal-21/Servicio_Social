@@ -1,5 +1,5 @@
 import { AuthLayout } from "@/components/layouts";
-import { AuthContext } from "@/context";
+import { AuthContext } from "@/context/auth";
 import { validations } from "@/utils";
 import { ErrorOutline } from "@mui/icons-material";
 import { Box, Button, Chip, Grid, TextField, Typography } from "@mui/material";

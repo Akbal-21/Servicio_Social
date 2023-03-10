@@ -1,5 +1,5 @@
-import { IUser } from "../../interfaces/user";
-import { AuthState } from "./";
+import { IUser } from "@/interfaces/userLogin";
+import { AuthState } from "./AuthProvider";
 
 type AuthActionType =
 	| { type: "[Auth] - Login"; payload: IUser }

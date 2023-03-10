@@ -1,7 +1,7 @@
-import { db } from "@/database";
-import { Data_User } from "@/database/entities";
 /* eslint-disable import/no-anonymous-default-export */
-import type { NextApiRequest, NextApiResponse } from "next";
+import { db } from "@/database";
+import { data_user } from "@/models";
+import { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
 	message: string;
@@ -26,7 +26,7 @@ async function delet_User(req: NextApiRequest, res: NextApiResponse<Data>) {
 
 	try {
 		await db.connect();
-		await Data_User.delete({ id_Data_User: Number(id) });
+		await data_user.destroy({ where: { id_Data_User: Number(id) } });
 		await db.desconect();
 	} catch (error) {
 		if (error instanceof Error) {

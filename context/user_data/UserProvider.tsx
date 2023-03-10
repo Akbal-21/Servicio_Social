@@ -1,8 +1,8 @@
+import { ssApi } from "@/api";
+import { deletUsers } from "@/database/dbUserCrud";
 import { IData_User } from "@/interfaces";
 import { useSnackbar } from "notistack";
 import { FC, useReducer } from "react";
-import ssApi from "../../api/ssApi";
-import { deletUsers } from "../../database/User/dbcrud";
 import { UserContext, userReducer } from "./";
 
 export interface UserState {

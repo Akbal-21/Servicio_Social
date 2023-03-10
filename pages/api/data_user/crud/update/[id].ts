@@ -1,12 +1,12 @@
 import { db } from "@/database";
-import { Data_User } from "@/database/entities";
-import type { NextApiRequest, NextApiResponse } from "next";
-/* eslint-disable import/no-anonymous-default-export */
+import { data_user } from "@/models";
+import { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
 	message: string;
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 	switch (req.method) {
 		case "PUT":
@@ -26,17 +26,18 @@ async function update_User(req: NextApiRequest, res: NextApiResponse<Data>) {
 
 	try {
 		await db.connect();
-		const user = await Data_User.findOneBy({ id_Data_User: Number(id) });
+		const user = await data_user.findOne({
+			where: { id_Data_User: Number(id) },
+		});
 
 		if (!user) {
 			return res.status(404).json({ message: "El usuario no existe" });
 		}
 
-		await Data_User.update(
-			{ id_Data_User: Number(id) },
+		await data_user.update(
 			{ name, last_name, second_last_name },
+			{ where: { id_Data_User: Number(id) } },
 		);
-
 		await db.desconect();
 	} catch (error) {
 		if (error instanceof Error) {

@@ -1,9 +1,8 @@
 import { db } from "@/database";
-import { User } from "@/database/entities";
-import bcrypt from "bcryptjs";
+import { user } from "@/models";
+import type { NextApiRequest, NextApiResponse } from "next";
 /* eslint-disable import/no-anonymous-default-export */
 //import { pool } from "@/database/database";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data =
 	| {
@@ -32,31 +31,34 @@ export default async function (
 }
 
 const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-	const { email1 = "", password = "" } = req.body;
-
+	const { email1 = "" } = req.body;
+	// password = ""
 	await db.connect();
 
-	const user = await User.findOne({ where: { email: email1 } });
+	const userLog = await user.findOne({ where: { email: email1 } });
 
 	await db.desconect();
 
-	console.log(user);
+	console.log(userLog);
 
-	if (!user) {
+	if (!userLog) {
 		return res.status(404).json({ message: "User not found" });
 	}
 
-	const { id_User, email, type_User } = user;
+	console.log({ userLog });
 
-	if (!bcrypt.compareSync(password, user.password)) {
-		return res.status(404).json({ message: "User not found" });
-	}
+	//const { id_User, email, type_User } = user;
+
+	// if (!bcrypt.compareSync(password, user.password)) {
+	// return res.status(404).json({ message: "User not found" });
+	// }
 
 	return res.status(200).json({
-		users: {
-			id_User,
-			email,
-			type_User,
-		},
+		// users: {
+		// id_User,
+		// email,
+		// type_User,
+		// },
+		message: "Hola",
 	});
 };

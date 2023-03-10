@@ -1,5 +1,8 @@
 import { db } from "@/database";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
+
+import "../../models/data_user.ts";
+import "../../models/user.ts";
 
 type Data = { message: string } | { message1: string };
 
@@ -17,6 +20,7 @@ const date = async (req: NextApiRequest, res: NextApiResponse) => {
 	//const { pool } = db;
 
 	await db.connect();
+	await db.db.sync();
 	await db.desconect();
 
 	return res.status(200).json({ message1: "Hola mundo" });

@@ -1,5 +1,5 @@
+import { IUser } from "@/interfaces/userLogin";
 import { createContext } from "react";
-import { IUser } from "../../interfaces/user";
 
 interface ContextProps {
 	isLoggedIn: boolean;
