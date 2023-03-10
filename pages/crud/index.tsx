@@ -1,14 +1,10 @@
 import { dbData_User } from "@/database";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
-import { Button, Grid, Typography } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { Button, Grid, Link, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { GetServerSideProps, NextPage } from "next";
+import NextLink from "next/link";
 import { IData_User } from "../../interfaces/data_user";
-
-const handleSubmit = (e: number) => {
-	console.log(e);
-};
 
 const columns: GridColDef[] = [
 	{ field: "id", headerName: "ID", headerAlign: "center", width: 70 },
@@ -26,39 +22,24 @@ const columns: GridColDef[] = [
 		width: 130,
 	},
 	{
-		field: "update",
-		headerName: "Actualizar",
+		field: "actions",
+		headerName: "Actions",
 		headerAlign: "center",
 		renderCell: (params: GridRenderCellParams) => {
 			return (
-				<Button
-					variant="contained"
-					endIcon={<DriveFolderUploadIcon />}
-					onClick={() => {
-						handleSubmit(params.row.id);
-					}}
-				>
-					Actualizar
-				</Button>
-			);
-		},
-		width: 200,
-	},
-	{
-		field: "delet",
-		headerName: "Eliminar",
-		headerAlign: "center",
-		renderCell: (params: GridRenderCellParams) => {
-			return (
-				<Button
-					variant="outlined"
-					startIcon={<DeleteIcon />}
-					onClick={() => {
-						handleSubmit(params.row.id);
-					}}
-				>
-					Delete
-				</Button>
+				<div>
+					<Button
+						variant="outlined"
+						size="small"
+						color="success"
+						startIcon={<EditIcon />}
+						sx={{ marginRight: "5px", marginLeft: "5px" }}
+					>
+						<NextLink href={`/crud/${params.row.id}`} passHref>
+							<Link underline="none">Editar</Link>
+						</NextLink>
+					</Button>
+				</div>
 			);
 		},
 		width: 200,
@@ -76,8 +57,6 @@ const CRUD_User_Page: NextPage<Props> = ({ data_user }) => {
 		last_name: user.last_name,
 		second_last_name: user.second_last_name,
 	}));
-
-	console.log({ data_user });
 	return (
 		<div>
 			<div>
