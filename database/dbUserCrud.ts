@@ -19,25 +19,71 @@ export const getUsers = async (): Promise<IData_User | null> => {
 	return JSON.parse(JSON.stringify(users));
 };
 
-export const getUserById = async (id: string): Promise<IData_User | null> => {
-	let user;
-	if (!id) {
-		return JSON.parse(JSON.stringify("Usuario no encontrado"));
+export const createUser = async (
+	name: string,
+	last_name: string,
+	second_last_name: string,
+): Promise<IData_User | null> => {
+	if (name.length < 2) {
+		return JSON.parse(JSON.stringify("El nombre debe de ser de 2 caracteres"));
 	}
 
+	if (last_name.length < 2) {
+		return JSON.parse(
+			JSON.stringify("El primer apellido debe de ser de 2 caracteres"),
+		);
+	}
+
+	if (second_last_name.length < 2) {
+		return JSON.parse(
+			JSON.stringify("El segundo apellido debe de ser de 2 caracteres"),
+		);
+	}
+	let dat_user;
 	try {
 		await db.connect();
-		user = await data_user.findOne({ where: { id_Data_User: Number(id) } });
+		dat_user = await data_user.create({
+			name,
+			last_name,
+			second_last_name,
+		});
 		await db.desconect();
 	} catch (error) {
 		if (error instanceof Error) {
-			return JSON.parse(JSON.stringify(error.message));
+			return JSON.parse(JSON.stringify("Error al crear al usuario"));
 		}
 	}
-	return JSON.parse(JSON.stringify(user));
+
+	console.log(dat_user);
+	return JSON.parse(JSON.stringify(dat_user));
 };
 
-export const deletUser = async (id: Number) => {
+export const getUserById = async (id: String): Promise<IData_User | null> => {
+	//let user;
+	//if (!id) {
+	//	return JSON.parse(JSON.stringify("Usuario no encontrado"));
+	//}
+
+	//try {
+	await db.connect();
+	const user = await data_user.findOne({
+		where: { id_Data_User: Number(id) },
+	});
+	await db.desconect();
+	if (!user) {
+		return null;
+	}
+	return JSON.parse(JSON.stringify(user));
+	// } catch (error) {
+	// if (error instanceof Error) {
+	// return JSON.parse(JSON.stringify(error.message));
+	// }
+	// }
+};
+
+export const deletUser = async (
+	id: Number,
+): Promise<typeof data_user | null> => {
 	if (!id) {
 		return JSON.parse(JSON.stringify("Usuario no encontrado"));
 	}

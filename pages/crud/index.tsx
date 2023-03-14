@@ -1,63 +1,65 @@
-import { dbDataUser } from "@/database";
-import { IData_User } from "@/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button, Grid, Link, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { GetServerSideProps, NextPage } from "next";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useDataUSer } from "../../hooks/useDataUSer";
 
-const columns: GridColDef[] = [
-	{ field: "id", headerName: "ID", headerAlign: "center", width: 70 },
-	{ field: "name", headerName: "Nombre", headerAlign: "center", width: 140 },
-	{
-		field: "last_name",
-		headerName: "Primer Apellido",
-		headerAlign: "center",
-		width: 130,
-	},
-	{
-		field: "second_last_name",
-		headerName: "Segundo Apellido",
-		headerAlign: "center",
-		width: 130,
-	},
-	{
-		field: "actions",
-		headerName: "Actions",
-		headerAlign: "center",
-		renderCell: (params: GridRenderCellParams) => {
-			return (
-				<div>
-					<Button
-						variant="outlined"
-						size="small"
-						color="success"
-						startIcon={<EditIcon />}
-						sx={{ marginRight: "5px", marginLeft: "5px" }}
-					>
-						<NextLink href={`/crud/${params.row.id}`} passHref>
-							<Link underline="none">Editar</Link>
-						</NextLink>
-					</Button>
-				</div>
-			);
+const CRUD_User_Page = () => {
+	const router = useRouter();
+	const columns: GridColDef[] = [
+		{ field: "id", headerName: "ID", headerAlign: "center", width: 70 },
+		{ field: "name", headerName: "Nombre", headerAlign: "center", width: 140 },
+		{
+			field: "last_name",
+			headerName: "Primer Apellido",
+			headerAlign: "center",
+			width: 130,
 		},
-		width: 250,
-	},
-];
+		{
+			field: "second_last_name",
+			headerName: "Segundo Apellido",
+			headerAlign: "center",
+			width: 130,
+		},
+		{
+			field: "actions",
+			headerName: "Actions",
+			headerAlign: "center",
+			renderCell: ({ row }: GridRenderCellParams) => {
+				return (
+					<div>
+						<Button
+							variant="outlined"
+							size="small"
+							color="success"
+							startIcon={<EditIcon />}
+							sx={{ marginRight: "5px", marginLeft: "5px" }}
+						>
+							<NextLink href={`/crud/${row.id}`} passHref>
+								<Link underline="none">Editar</Link>
+							</NextLink>
+						</Button>
+					</div>
+				);
+			},
+			width: 250,
+		},
+	];
 
-interface Props {
-	data_user: IData_User[];
-}
+	const { dataUser, isLoadig } = useDataUSer("/data_user/crud/read");
 
-const CRUD_User_Page: NextPage<Props> = ({ data_user }) => {
-	const rows = data_user.map((user) => ({
+	const rows = dataUser!.map((user) => ({
 		id: user.id_Data_User,
 		name: user.name,
 		last_name: user.last_name,
 		second_last_name: user.second_last_name,
 	}));
-	console.log(data_user);
+
+	const onNewUser = () => {
+		router.push("/crud/newUser");
+	};
+
 	return (
 		<div>
 			<div>
@@ -76,27 +78,37 @@ const CRUD_User_Page: NextPage<Props> = ({ data_user }) => {
 			>
 				<Grid container className="fadeIn">
 					<Grid item xs={12} sx={{ height: 500, width: "80%" }}>
-						<DataGrid
-							sx={{ alignItems: "normal", textAlign: "center" }}
-							rows={rows}
-							columns={columns}
-						/>
+						<div
+							style={{
+								alignContent: "flex-end",
+								marginBottom: "5px",
+							}}
+						>
+							<Button
+								variant="contained"
+								color="primary"
+								sx={{ alignItems: "flex-end" }}
+								onClick={() => {
+									onNewUser();
+								}}
+							>
+								Nuevo Usuario
+							</Button>
+						</div>
+						{isLoadig ? (
+							<h1>Cargando ...</h1>
+						) : (
+							<DataGrid
+								sx={{ alignItems: "normal", textAlign: "center" }}
+								rows={rows}
+								columns={columns}
+							/>
+						)}
 					</Grid>
 				</Grid>
 			</div>
 		</div>
 	);
-};
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-	const data_user = await dbDataUser.getUsers();
-	console.log(data_user);
-
-	return {
-		props: {
-			data_user,
-		},
-	};
 };
 
 export default CRUD_User_Page;

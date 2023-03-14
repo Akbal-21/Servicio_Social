@@ -1,3 +1,4 @@
+import { IData_User } from "../../../../interfaces/dataUser";
 /* eslint-disable import/no-anonymous-default-export */
 import { db } from "@/database";
 import { data_user } from "@/models";
@@ -13,7 +14,8 @@ type Data =
 				last_name: string;
 				second_last_name: string;
 			};
-	  };
+	  }
+	| IData_User;
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 	switch (req.method) {
@@ -45,19 +47,14 @@ async function create_User(req: NextApiRequest, res: NextApiResponse<Data>) {
 	if (last_name.length < 2) {
 		return res
 			.status(404)
-			.json({ message: "El nombre debe de ser de 2 caracteres" });
+			.json({ message: "El apellido debe de ser de 2 caracteres" });
 	}
 
 	if (second_last_name.length < 2) {
 		return res
 			.status(404)
-			.json({ message: "El nombre debe de ser de 2 caracteres" });
+			.json({ message: "El segundo apellido debe de ser de 2 caracteres" });
 	}
-
-	// const data_user = new Data_User();
-	// data_user.name = name1;
-	// data_user.last_name = last_name1;
-	// data_user.second_last_name = second_last_name1;
 	let dat_user;
 	try {
 		await db.connect();
@@ -76,11 +73,11 @@ async function create_User(req: NextApiRequest, res: NextApiResponse<Data>) {
 	console.log(dat_user);
 
 	return res.status(200).json({
-		// DATA_USER: {
-		// name,
-		// last_name,
-		// second_last_name,
-		// },
-		message: "Hola",
+		DATA_USER: {
+			name,
+			last_name,
+			second_last_name,
+		},
+		//message: "Hola",
 	});
 }

@@ -9,8 +9,12 @@ interface ContextProps {
 		{ id_Data_User, name, last_name, second_last_name }: IData_User,
 		showSnackbar?: boolean,
 	) => Promise<void>;
-	// rome-ignore lint/suspicious/noExplicitAny: <explanation>
-	deletUsers: (id: number) => Promise<any>;
+	deletUser: ({ id_Data_User }: IData_User, showSnackbar?: boolean) => void;
+	createNewUser: (
+		name: string,
+		last_name: string,
+		second_last_name: string,
+	) => Promise<void>;
 }
 
 export const UserContext = createContext({} as ContextProps);

@@ -3,6 +3,7 @@ import { UserState } from "./";
 
 type UserActionType =
 	| { type: "[User] - User-Update"; payload: IData_User }
+	| { type: "[User] - Create-New-User"; payload: IData_User }
 	| { type: "[User] - Delet-User" };
 
 export const userReducer = (
@@ -21,6 +22,12 @@ export const userReducer = (
 					}
 					return user;
 				}),
+			};
+
+		case "[User] - Create-New-User":
+			return {
+				...state,
+				Users: [...state.Users, action.payload],
 			};
 
 		case "[User] - Delet-User":
