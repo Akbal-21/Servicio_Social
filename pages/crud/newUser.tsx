@@ -1,8 +1,7 @@
-import { UserContext } from "@/context/user_data";
 import { ErrorOutline } from "@mui/icons-material";
 import { Box, Button, Chip, Grid, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import ssApi from "../../api/ssApi";
 
@@ -13,8 +12,8 @@ type FormData = {
 };
 
 const NewUserPAge = () => {
-	const { createNewUser } = useContext(UserContext);
-	const [errorMessage, setErrorMessage] = useState("");
+	//const { createNewUser } = useContext(UserContext);
+	//const [errorMessage, setErrorMessage] = useState("");
 	const [showError, setShowError] = useState(false);
 
 	const router = useRouter();

@@ -26,7 +26,6 @@ async function getUsers(req: NextApiRequest, res: NextApiResponse) {
 		await db.connect();
 
 		users = await data_user.findAll({ raw: true, nest: true });
-		console.log(users);
 
 		await db.desconect();
 	} catch (error) {

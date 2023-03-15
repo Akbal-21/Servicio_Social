@@ -70,8 +70,6 @@ async function create_User(req: NextApiRequest, res: NextApiResponse<Data>) {
 		}
 	}
 
-	console.log(dat_user);
-
 	return res.status(200).json({
 		DATA_USER: {
 			name,
