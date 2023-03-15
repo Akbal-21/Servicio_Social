@@ -1,4 +1,4 @@
-import { IData_User } from "../../../../interfaces/dataUser";
+import { IData_User } from "../../../../../interfaces/dataUser";
 /* eslint-disable import/no-anonymous-default-export */
 import { db } from "@/database";
 import { data_user } from "@/models";

@@ -2,15 +2,18 @@ import { ssApi } from "@/api";
 import { UserContext, userReducer } from "./";
 //import { deletUsers } from "@/database/dbUserCrud";
 import { IData_User } from "@/interfaces";
+import axios, { AxiosError } from "axios";
 import { useSnackbar } from "notistack";
 import { FC, useReducer } from "react";
 
 export interface UserState {
 	Users: IData_User[];
+	user?: IData_User;
 }
 
 const User_INITIAL_STATE: UserState = {
 	Users: [],
+	user: undefined,
 };
 
 interface Props {
@@ -50,31 +53,36 @@ export const UserProvider: FC<Props> = ({ children }) => {
 		name: string,
 		last_name: string,
 		second_last_name: string,
-		showSnackbar = false,
-	) => {
+	): Promise<{ hasError: boolean; message?: string }> => {
 		try {
-			const { data } = await ssApi.post<IData_User>("/data_user/crud/create", {
+			const { data } = await ssApi.post("/data_user/crud/create", {
 				name,
 				last_name,
 				second_last_name,
 			});
 
 			dispatch({ type: "[User] - Create-New-User", payload: data });
-			if (showSnackbar)
-				enqueueSnackbar("Se creo el usuario correctamente", {
-					variant: "success",
-					autoHideDuration: 1500,
-					anchorOrigin: {
-						vertical: "top",
-						horizontal: "right",
-					},
-				});
-		} catch (error) {}
+			return {
+				hasError: false,
+			};
+		} catch (err) {
+			if (axios.isAxiosError(err)) {
+				const error = err as AxiosError;
+				return {
+					hasError: true,
+					message: error.message,
+				};
+			}
+			return {
+				hasError: true,
+				message: "No se pudo crear el usuario",
+			};
+		}
 	};
 
 	const deletUser = ({ id_Data_User }: IData_User, showSnackbar = false) => {
 		try {
-			ssApi.delete(`/data_user/crud/${id_Data_User}`);
+			ssApi.delete(`/data_user/crud/delet/${id_Data_User}`);
 			dispatch({ type: "[User] - Delet-User" });
 
 			if (showSnackbar)

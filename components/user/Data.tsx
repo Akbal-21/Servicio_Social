@@ -1,9 +1,9 @@
-import { dbDataUser } from "@/database";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { ChangeEvent, FC, useMemo, useState } from "react";
+import ssApi from "../../api/ssApi";
 
 interface Props {
 	id_Data_User: number;
@@ -18,10 +18,7 @@ export const Data: FC<Props> = ({
 	last_name,
 	second_last_name,
 }) => {
-	console.log(id_Data_User);
 	const router = useRouter();
-
-	//const { updateUser, deletUsers } = useContext(UserContext);
 
 	const [nameValue, setNameValue] = useState(name);
 	const [last_nameValue, setLast_nameValue] = useState(last_name);
@@ -42,26 +39,28 @@ export const Data: FC<Props> = ({
 		setSecond_lastnameValue(event.target.value);
 	};
 
-	const onUpdate = () => {
+	const onUpdate = async () => {
 		if (isNotTrim) {
 			return;
 		}
 
-		// const updateUSer: IData_User = {
-		// ...data_user,
-		// name: nameValue,
-		// last_name: last_nameValue,
-		// second_last_name: second_lastnameValue,
-		// };
-		//
-		// updateUser(updateUSer);
-		//router.push("/crud");
+		const { data } = await ssApi({
+			url: "/data_user/crud",
+			method: "PUT",
+			data: { id_Data_User, nameValue, last_nameValue, second_lastnameValue },
+		});
+		console.log({ data });
+		router.push("/crud");
 	};
 
 	const onDelete = async () => {
-		// await dbDataUser.deletUser(id_Data_User);
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		await dbDataUser.deletUser(id_Data_User);
+		await ssApi({
+			method: "DELETE",
+			url: "/data_user/crud",
+			data: id_Data_User,
+		});
+		//console.log({ data });
+
 		router.push("/crud");
 	};
 

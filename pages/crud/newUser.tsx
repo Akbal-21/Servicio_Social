@@ -4,6 +4,7 @@ import { Box, Button, Chip, Grid, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import ssApi from "../../api/ssApi";
 
 type FormData = {
 	name: string;
@@ -13,6 +14,8 @@ type FormData = {
 
 const NewUserPAge = () => {
 	const { createNewUser } = useContext(UserContext);
+	const [errorMessage, setErrorMessage] = useState("");
+	const [showError, setShowError] = useState(false);
 
 	const router = useRouter();
 	const {
@@ -21,23 +24,17 @@ const NewUserPAge = () => {
 		formState: { errors },
 	} = useForm<FormData>();
 
-	const onNewUSer = async ({ name, last_name, second_last_name }: FormData) => {
+	const onNewUSer = async (form: FormData) => {
 		setShowError(false);
 
-		const isValidUser = await createNewUser(name, last_name, second_last_name);
-
-		if (isValidUser == null) {
-			setShowError(true);
-			setTimeout(() => {
-				setShowError(false);
-			}, 3000);
-			return;
-		}
+		await ssApi({
+			method: "POST",
+			url: "/data_user/crud",
+			data: form,
+		});
 
 		router.push("/crud");
 	};
-
-	const [showError, setShowError] = useState(false);
 
 	return (
 		<form onSubmit={handleSubmit(onNewUSer)} noValidate>

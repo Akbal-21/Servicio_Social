@@ -27,7 +27,7 @@ export const userReducer = (
 		case "[User] - Create-New-User":
 			return {
 				...state,
-				Users: [...state.Users, action.payload],
+				user: action.payload,
 			};
 
 		case "[User] - Delet-User":

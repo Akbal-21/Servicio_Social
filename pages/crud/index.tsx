@@ -1,7 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
-import { Button, Grid, Link, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useDataUSer } from "../../hooks/useDataUSer";
 
@@ -35,10 +34,9 @@ const CRUD_User_Page = () => {
 							color="success"
 							startIcon={<EditIcon />}
 							sx={{ marginRight: "5px", marginLeft: "5px" }}
+							href={`/crud/${row.id}`}
 						>
-							<NextLink href={`/crud/${row.id}`} passHref>
-								<Link underline="none">Editar</Link>
-							</NextLink>
+							Editar
 						</Button>
 					</div>
 				);
@@ -55,10 +53,6 @@ const CRUD_User_Page = () => {
 		last_name: user.last_name,
 		second_last_name: user.second_last_name,
 	}));
-
-	const onNewUser = () => {
-		router.push("/crud/newUser");
-	};
 
 	return (
 		<div>
@@ -84,16 +78,16 @@ const CRUD_User_Page = () => {
 								marginBottom: "5px",
 							}}
 						>
-							<Button
-								variant="contained"
-								color="primary"
-								sx={{ alignItems: "flex-end" }}
-								onClick={() => {
-									onNewUser();
-								}}
-							>
-								Nuevo Usuario
-							</Button>
+							<Box display="flex" justifyContent="end" sx={{ mb: 2 }}>
+								<Button
+									variant="contained"
+									color="primary"
+									sx={{ alignItems: "flex-end" }}
+									href="/crud/newUser"
+								>
+									Nuevo Usuario
+								</Button>
+							</Box>
 						</div>
 						{isLoadig ? (
 							<h1>Cargando ...</h1>
