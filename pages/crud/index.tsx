@@ -1,54 +1,65 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { useRouter } from "next/router";
 import { useDataUSer } from "../../hooks/useDataUSer";
 
+const columns: GridColDef[] = [
+	{ field: "id", headerName: "ID", headerAlign: "center", width: 70 },
+	{ field: "name", headerName: "Nombre", headerAlign: "center", width: 140 },
+	{
+		field: "last_name",
+		headerName: "Primer Apellido",
+		headerAlign: "center",
+		width: 130,
+	},
+	{
+		field: "second_last_name",
+		headerName: "Segundo Apellido",
+		headerAlign: "center",
+		width: 130,
+	},
+	{
+		field: "email",
+		headerName: "Email",
+		headerAlign: "center",
+		width: 140,
+	},
+	{
+		field: "type_user",
+		headerName: "Tipo de usuario",
+		headerAlign: "center",
+		width: 70,
+	},
+	{
+		field: "actions",
+		headerName: "Actions",
+		headerAlign: "center",
+		renderCell: ({ row }: GridRenderCellParams) => {
+			return (
+				<div>
+					<Button
+						variant="outlined"
+						size="small"
+						color="success"
+						startIcon={<EditIcon />}
+						sx={{ marginRight: "5px", marginLeft: "5px" }}
+						href={`/crud/${row.id_User}`}
+					>
+						Editar
+					</Button>
+				</div>
+			);
+		},
+		width: 250,
+	},
+];
+
 const CRUD_User_Page = () => {
-	const router = useRouter();
-	const columns: GridColDef[] = [
-		{ field: "id", headerName: "ID", headerAlign: "center", width: 70 },
-		{ field: "name", headerName: "Nombre", headerAlign: "center", width: 140 },
-		{
-			field: "last_name",
-			headerName: "Primer Apellido",
-			headerAlign: "center",
-			width: 130,
-		},
-		{
-			field: "second_last_name",
-			headerName: "Segundo Apellido",
-			headerAlign: "center",
-			width: 130,
-		},
-		{
-			field: "actions",
-			headerName: "Actions",
-			headerAlign: "center",
-			renderCell: ({ row }: GridRenderCellParams) => {
-				return (
-					<div>
-						<Button
-							variant="outlined"
-							size="small"
-							color="success"
-							startIcon={<EditIcon />}
-							sx={{ marginRight: "5px", marginLeft: "5px" }}
-							href={`/crud/${row.id}`}
-						>
-							Editar
-						</Button>
-					</div>
-				);
-			},
-			width: 250,
-		},
-	];
-
 	const { dataUser, isLoadig } = useDataUSer("/data_user/crud/read");
-
 	const rows = dataUser!.map((user) => ({
-		id: user.id_Data_User,
+		id: user.id_User,
+		email: user.email,
+		type_user: user.type_User,
 		name: user.name,
 		last_name: user.last_name,
 		second_last_name: user.second_last_name,

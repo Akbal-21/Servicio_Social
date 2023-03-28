@@ -4,7 +4,7 @@ export const db = new Sequelize(
 	String(process.env.MYSQL_DATABASE),
 	String(process.env.MYSQL_USER),
 	String(process.env.MYSQL_PASWORD),
-	
+
 	{
 		host: String(process.env.MYSQL_HOST),
 		dialect: "mysql",
@@ -23,5 +23,10 @@ export const connect = async () => {
 };
 
 export const desconect = async () => {
-	await db.close();
+	try {
+		await db.close();
+		console.log("Data Base Desconected");
+	} catch (error) {
+		console.log(error);
+	}
 };

@@ -1,22 +1,27 @@
 import { DataTypes } from "sequelize";
 import { db } from "../database/db";
 
-export const data_user = db.define("data_user", {
-	id_Data_User: {
+export const file_model = db.define("file", {
+	// Model attributes are defined here
+	id_file: {
 		type: DataTypes.INTEGER,
 		autoIncrement: true,
 		primaryKey: true,
 	},
-	name: {
+	file_name: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	last_name: {
+	type_file: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	second_last_name: {
-		type: DataTypes.STRING,
+	size_file: {
+		type: DataTypes.INTEGER,
 		allowNull: false,
+	},
+	file: {
+		type: DataTypes.BLOB,
+		allowNull: true,
 	},
 });

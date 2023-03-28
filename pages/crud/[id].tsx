@@ -1,25 +1,17 @@
 import { Data } from "@/components/user/Data";
+import { getUserById } from "@/database/dbUserCrud";
 import { GetServerSideProps, NextPage } from "next";
-import { useDataUserByID } from "../../hooks/useDataUSer";
+import { IUser } from "../../interfaces/user_interface";
 
 interface Props {
-	id: string;
+	datUser: IUser;
 }
 
-const UserEntry: NextPage<Props> = ({ id }) => {
-	const { dataUser, isLoadig } = useDataUserByID(`/data_user/crud/read/${id}`);
+const UserEntry: NextPage<Props> = ({ datUser }) => {
+	//const { dataUser, isLoadig } = useDataUserByID(`/data_user/crud/read/${id}`);
 	return (
 		<>
-			{isLoadig ? (
-				<h1>Cargando ...</h1>
-			) : (
-				<Data
-					id_Data_User={dataUser.id_Data_User}
-					name={dataUser.name}
-					last_name={dataUser.last_name}
-					second_last_name={dataUser.second_last_name}
-				/>
-			)}
+			<Data datUser={datUser} />
 		</>
 	);
 };
@@ -33,10 +25,10 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
 	const { id = "" } = query as { id: string };
 
-	//const datUser = await getUserById(id.toString());
+	const datUser = await getUserById(id.toString());
 	return {
 		props: {
-			id,
+			datUser,
 		},
 	};
 };

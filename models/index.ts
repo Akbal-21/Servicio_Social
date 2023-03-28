@@ -1,2 +1,2 @@
-export * from "./data_user";
-export * from "./user";
+export * as ModelFIle from "./file_model";
+export * as ModelUser from "./user_model";

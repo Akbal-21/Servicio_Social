@@ -1,5 +1,5 @@
 import { ssApi } from "@/api";
-import { IUser } from "@/interfaces/userLogin";
+import { IUser } from "@/interfaces/user_interface";
 import { FC, useReducer } from "react";
 import { AuthContext, authReducer } from "./";
 
@@ -27,7 +27,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 		try {
 			const { data } = await ssApi.post("/auth/login", { email, password });
 			const { users } = data;
-			const { id_User, name, tipo_user } = users;
+			//const { id_User, name, tipo_user } = users;
 			dispatch({ type: "[Auth] - Login", payload: users });
 			return true;
 		} catch (error) {

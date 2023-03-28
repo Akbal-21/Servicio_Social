@@ -1,14 +1,11 @@
-import { IData_User } from "../../../../../interfaces/dataUser";
 /* eslint-disable import/no-anonymous-default-export */
 import { db } from "@/database";
-import { data_user } from "@/models";
+import { ModelUser } from "@/models";
 import { NextApiRequest, NextApiResponse } from "next";
 
-type Data =
-	| {
-			message: string;
-	  }
-	| IData_User[];
+type Data = {
+	message: string;
+};
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 	switch (req.method) {
@@ -25,7 +22,7 @@ async function getUsers(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		await db.connect();
 
-		users = await data_user.findAll({ raw: true, nest: true });
+		users = await ModelUser.user_model.findAll({ raw: true, nest: true });
 
 		await db.desconect();
 	} catch (error) {

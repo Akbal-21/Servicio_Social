@@ -1,7 +1,8 @@
-/* eslint-disable import/no-anonymous-default-export */
 import { db } from "@/database";
-import { data_user, user } from "@/models";
+import { ModelUser } from "@/models";
 import { validations } from "@/utils";
+/* eslint-disable import/no-anonymous-default-export */
+import bcrypt from "bcryptjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data =
@@ -29,53 +30,66 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 async function register(req: NextApiRequest, res: NextApiResponse<Data>) {
 	const {
-		name = "",
-		email = "",
-		password = "",
-		last_name = "",
-		second_last_namme = "",
+		//name = "",
+		email1 = "",
+		password1 = "",
+		//last_name = "",
+		//second_last_namme = "",
 	} = req.body as {
-		name: string;
-		email: string;
-		password: string;
-		last_name: string;
-		second_last_namme: string;
+		//name: string;
+		email1: string;
+		password1: string;
+		//last_name: string;
+		//second_last_namme: string;
 	};
 
-	if (password.length < 6) {
+	const rest = req.body;
+
+	console.log({ rest });
+
+	if (password1.length < 6) {
 		return res
 			.status(404)
 			.json({ message: "La contraseña debe de ser de 6 caracteres" });
 	}
 
-	if (name.length < 2) {
-		return res
-			.status(404)
-			.json({ message: "El nombre debe de ser de 2 caracteres" });
-	}
+	// if (name.length < 2) {
+	// 	return res
+	// 		.status(404)
+	// 		.json({ message: "El nombre debe de ser de 2 caracteres" });
+	// }
 
-	if (last_name.length < 2) {
-		return res
-			.status(404)
-			.json({ message: "El nombre debe de ser de 2 caracteres" });
-	}
+	// if (last_name.length < 2) {
+	// 	return res
+	// 		.status(404)
+	// 		.json({ message: "El nombre debe de ser de 2 caracteres" });
+	// }
 
-	if (second_last_namme.length < 2) {
-		return res
-			.status(404)
-			.json({ message: "El nombre debe de ser de 2 caracteres" });
-	}
+	// if (second_last_namme.length < 2) {
+	// 	return res
+	// 		.status(404)
+	// 		.json({ message: "El nombre debe de ser de 2 caracteres" });
+	// }
 
-	if (!validations.isValidEmail(email)) {
+	if (!validations.isValidEmail(email1)) {
 		return res.status(404).json({ message: "El email no es valido" });
 	}
+	const pass1 = bcrypt.hashSync(password1);
 
-	const userr = new user();
+	let user;
 
-	const data_use = new data_user();
+	// const data_use = new data_user();
 	await db.connect();
 
+	user = await ModelUser.user_model.create({
+		email: email1.toLocaleLowerCase(),
+		password: pass1,
+		type_User: "admin",
+	});
+
 	await db.desconect();
+
+	console.log(user);
 
 	return res.status(200).json({ message: "Hola mundo" });
 }

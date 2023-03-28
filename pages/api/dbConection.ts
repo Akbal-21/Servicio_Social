@@ -1,8 +1,7 @@
+import "../../models/user_model.ts";
+//import "../../models/file_model";
 import { db } from "@/database";
 import { NextApiRequest, NextApiResponse } from "next";
-
-import "../../models/data_user.ts";
-import "../../models/user.ts";
 
 type Data = { message: string } | { message1: string };
 
@@ -17,10 +16,8 @@ export default function async(req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const date = async (req: NextApiRequest, res: NextApiResponse) => {
-	//const { pool } = db;
-
 	await db.connect();
-	await db.db.sync();
+	await db.db.sync({ alter: true });
 	await db.desconect();
 
 	return res.status(200).json({ message1: "Hola mundo" });
