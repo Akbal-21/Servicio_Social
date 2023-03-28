@@ -7,7 +7,7 @@ type Data =
 	| {
 			message: string;
 	  }
-	| { id: number };
+	| { id_file: number };
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 	switch (req.method) {
@@ -27,8 +27,6 @@ async function createFile(req: NextApiRequest, res: NextApiResponse<Data>) {
 		type_file: string;
 	};
 
-	console.log(req.body);
-
 	if (!(type_file || size_file || userIdUser || file_name)) {
 		return res.status(404).json({ message: "Debe de haber un archivo" });
 	}
@@ -40,22 +38,16 @@ async function createFile(req: NextApiRequest, res: NextApiResponse<Data>) {
 			type_file,
 			userIdUser,
 			file_name,
-			createdAt: Date.now(),
-			updatedAt: Date.now(),
 		});
-		const id = await ModelFIle.file_model.findOne({
-			where: {
-				size_file,
-				type_file,
-				userIdUser,
-				file_name,
-				createdAt: Date.now(),
-			},
+		const data = await ModelFIle.file_model.findOne({
+			order: [["id_file", "DESC"]],
+			limit: 1,
 		});
 		await db.desconect();
-		console.log(id);
-		const { id_file } = id?.dataValues;
-		return res.status(202).end();
+		const { id_file } = data?.dataValues;
+		console.log(id_file);
+		// const { id_file } = id?.dataValues;
+		return res.status(200).json({ id_file });
 	} catch (error) {
 		if (error instanceof Error) {
 			return res.status(500).json({ message: error.message });

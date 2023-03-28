@@ -20,6 +20,8 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 async function updateFile(req: NextApiRequest, res: NextApiResponse<Data>) {
 	const file = req.body as { file: Blob };
 
+	const { id_file } = req.query as { id_file: string };
+
 	if (!file) {
 		return res.status(404).json({ message: "Debe de haber un archivo" });
 	}
@@ -30,10 +32,10 @@ async function updateFile(req: NextApiRequest, res: NextApiResponse<Data>) {
 			{
 				file: file,
 			},
-			{ where: { id_file: 6 } },
+			{ where: { id_file: Number(id_file) } },
 		);
 		await db.desconect();
-		return res.status(202).end();
+		return res.status(202).json({ message: "file" });
 	} catch (error) {
 		if (error instanceof Error) {
 			return res.status(500).json({ message: error.message });

@@ -2,6 +2,7 @@ import { AuthContext } from "@/context/auth";
 import { Inter } from "next/font/google";
 import { useContext } from "react";
 import AdminPage from "./admin";
+import StudentPage from "./student";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,7 @@ export default function Home() {
 					</>
 				) : (
 					<>
-						<h1>Hola Alumno</h1>
+						<StudentPage />
 					</>
 				)}
 			</div>

@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 type FormData = {
-	file_name: string;
 	type_file: string;
 	size_file: number;
 	file: Blob[];
@@ -43,11 +42,10 @@ const FilePage = () => {
 
 	const newFile = async (form: FormData) => {
 		const { name } = form.file[0];
-		setValue("file_name", name);
-		const { userIdUser, size_file, type_file, file_name } = form;
-		console.log(form.file_name);
+		const file_name = name;
+		const { userIdUser, size_file, type_file } = form;
 
-		//console.log(name, form.size_file, form.type_file, userIdUser);
+		console.log(name, form.size_file, form.type_file, userIdUser);
 		try {
 			const { data } = await ssApi({
 				url: "/data_user/file",
@@ -59,12 +57,13 @@ const FilePage = () => {
 					file_name,
 				},
 			});
+			const { id_file } = data;
+			console.log(id_file);
 			const dat = await ssApi({
-				url: "/data_user/file/insertfile",
+				url: `/data_user/file/insertfile/${id_file}`,
 				method: "POST",
 				data: form.file,
 			});
-			console.log(data);
 		} catch (error) {
 			console.log(error);
 		}
